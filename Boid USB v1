@@ -1,0 +1,149 @@
+How to setup a boid using xubuntu 20.04 live on a USB
+
+The master version of this document is here:
+https://github.com/PrinceOfParallax/BoidLinux-/
+
+========
+
+I have said to select English for the install process for 2 reasons:
+1) I don't know any other spoken language very well
+2) Seths Polish is bad. Nie mój cyrk, nie moje malpy
+
+Software
+========
+Short hardware comment:
+Your mining computer doesn't need any HDD or CD/DVD/BD as long as it has at
+least 2GB of RAM, can boot USB, has some network connection to the internet
+and of course a reasonable connection
+
+If you wish to install to an HDD instead of a USB,
+ see the changes to the instructions jsut change target.
+
+To create the USB, you need a 4GB USB and temporarily need a PC
+with a CD (or DVD/BD) writer (or an tool like Rufus or PowerISO), a USB port and of course an internet
+connection to the PC
+
+1) Download the xubuntu 20.04 desktop live CD iso for amd64
+   ( look here for mirrors: http://www.xubuntu.org/getubuntu )
+
+2) Burn it to CD then boot that temporarily on any PC with a CD/DVD/BD and
+   a USB port (this and the next 2 step won't effect that PC)
+   Select "English" then select "Try Xubuntu without installing"
+   and wait for the desktop to appear
+   (this happens by default if you wait for the timeouts)
+
+3) Plug in your 4GB USB device and it should appear on the desktop - you can
+   leave it's contents as long as there is at least 2.8GB free
+
+4) Now run "Startup Disk Creator" in "Applications->System"
+   (the system menu is the little rat in the top left corner)
+
+(if you have no mouse you can get the menu with <ctr><esc> and navigate
+the menu with the arrow keys and <return> key)
+
+From here select the boot CD as the "Source" and the USB as the "Disk to use"
+lastly move the slider to 2GB for reserved extra space
+
+The 2GB should be enough for modifications
+
+Click: "Make Install Disk"
+After about 15-20 minutes you have a base xubuntu 20.04 boot USB
+(you can shut down this computer now)
+
+5) Boot your  PC with this USB stick, select "English"
+   then select "Try Xubuntu without installing" and wait for the desktop to
+   appear (this happens by default if you wait for the timeouts)
+
+6) Start a terminal
+   "Applications->Accessories->Terminal Emulator"
+
+7) sudo apt-get install openssh-server screen
+
+8) sudo apt-get install fglrx fglrx-amdcccle fglrx-dev
+   sudo sync
+   sudo shutdown -r now
+
+### ALWAYS do a "sudo sync" and wait for it to finish every time before 
+### shutting down the PC to ensure all data is written to the USB
+
+9) sudo apt update -y
+   sudo sync
+  sudo shutdown -r now
+
+11) apt-get install ntpd
+### An accurate clock is always nice but not required
+
+13) BOID Install:
+  wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
+  # This loads nvm bash_completion
+
+  command -v nvm
+
+  nvm install node
+
+  npm install boidcmd -g
+
+  sudo apt install boinc-client -y
+
+  service boinc-client restart
+
+  boidcmd setup
+  
+14) Enter you Boid Account information
+
+15) Next if you wish to ssh into the box you must set a password to do this you simply have to be logged into it at the screen and type
+
+  sudo passwd ubuntu
+
+### it will prompt you (twice) to enter a password for the ubuntu account
+
+
+Basic setup complete.
+
+========
+
+If you want to SSH into the machine and run BOID:
+ From a terminal on the miner display each time after you boot:
+  xhost +
+
+ 'xhost +' isn't needed if you ssh into the machine with the same
+ username that the GUI boots into (which is 'ubuntu' in this case)
+
+Then after you ssh into the machine:
+ export DISPLAY=:0
+before running BOID
+
+This is of course just the basics ... but it should get you a computer
+up and running and able to run BOID
+
+========
+
+You should keep an eye on USB disk space
+The system logger writes log files in the /var/log/ directory
+The two main ones that grow large are 'kern.log' and 'syslog'
+If you want to keep them, save them away to some other computer
+When space is low, just delete them e.g.
+
+   sudo rm -i /var/log/syslog
+   sudo rm -i /var/log/kern.log
+
+The 'df' command will show you the current space e.g.:
+
+   sudo df
+
+Filesystem           1K-blocks      Used Available Use% Mounted on
+aufs                   2099420    892024   1100748  45% /
+none                   1015720       628   1015092   1% /dev
+/dev/sda1              3909348   2837248   1072100  73% /cdrom
+/dev/loop0              670848    670848         0 100% /rofs
+none                   1023772       136   1023636   1% /dev/shm
+tmpfs                  1023772        16   1023756   1% /tmp
+none                   1023772       124   1023648   1% /var/run
+none                   1023772         0   1023772   0% /var/lock
+
+
+This shows the 2GB space allocated when you setup the USB as '/' (aufs)
+In this example, it's currently 45% full with almost 1.1GB of free space

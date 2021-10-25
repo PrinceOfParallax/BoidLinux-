@@ -70,10 +70,7 @@ After about 15-20 minutes you have a base xubuntu 20.04 boot USB
    sudo sync
   sudo shutdown -r now
 
-11) apt-get install ntpd
-### An accurate clock is always nice but not required
-
-13) BOID Install:
+10) BOID Install:
   wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -92,9 +89,9 @@ After about 15-20 minutes you have a base xubuntu 20.04 boot USB
 
   boidcmd setup
   
-14) Enter you Boid Account information
+11) Enter you Boid Account information
 
-15) Next if you wish to ssh into the box you must set a password to do this you simply have to be logged into it at the screen and type
+12) Next if you wish to ssh into the box you must set a password to do this you simply have to be logged into it at the screen and type
 
   sudo passwd ubuntu
 
